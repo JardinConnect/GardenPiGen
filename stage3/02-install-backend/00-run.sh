@@ -2,15 +2,21 @@
 
 on_chroot << EOF
 apt-get update
-apt-get install -y python3-pip python3-venv wget unzip lighttpd mosquitto mosquitto-clients python3-dev build-essential
+apt-get install -y python3-pip python3-venv lighttpd mosquitto mosquitto-clients python3-dev build-essential
 EOF
 
-on_chroot << EOF
-cd /tmp
-wget https://files.catbox.moe/0lrahk.zip -O backend.zip
-unzip backend.zip
-mv GardenBack-main /opt/gardenback
-rm backend.zip
+# Copy backend files
+mkdir -p "${ROOTFS_DIR}/opt/gardenback"
+if [ -d "files/backend" ] && [ "$(ls -A files/backend)" ]; then
+    cp -r files/backend/* "${ROOTFS_DIR}/opt/gardenback/"
+else
+    echo "WARNING: files/backend is empty. Backend will not be installed."
+    echo "Please copy your GardenBack source code to stage3/02-install-backend/files/backend/"
+fi
+
+# Setup backend if files exist
+if [ -f "${ROOTFS_DIR}/opt/gardenback/requirements.txt" ]; then
+    on_chroot << EOF
 cd /opt/gardenback
 
 # Setup Virtual Environment
@@ -23,19 +29,15 @@ pip3 install --upgrade pip
 # Install requirements
 pip3 install -r requirements.txt
 
-# Initialize database
-python3 -m alembic upgrade head
-
-# Optionally seed database (uncomment if needed)
-# python3 db/seed.py
+# Initialize database if alembic exists
+if [ -f "alembic.ini" ]; then
+    python3 -m alembic upgrade head
+fi
 EOF
 
-# Set permissions
-on_chroot << EOF
+    # Set permissions
+    on_chroot << EOF
 chown -R root:root /opt/gardenback
 chmod -R 755 /opt/gardenback
-
-# Create database directory if needed
-mkdir -p /opt/gardenback/db
-chmod 755 /opt/gardenback/db
 EOF
+fi

@@ -1,0 +1,59 @@
+services:
+  fastapi-backend:
+    build: .
+    container_name: fastapi-backend
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    env_file:
+      - .env
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+    command: >
+      sh -c "python -m alembic upgrade head &&
+             python -m uvicorn main:app --host 0.0.0.0 --port ${APP_PORT} --reload"
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+
+  # Service pour les commandes manuelles (ex : migrations, shell, tests)
+  db-setup:
+    build: .
+    container_name: fastapi-db-setup
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    profiles:
+      - tools  # Ne démarre pas avec docker-compose up
+    working_dir: /app
+    command: bash  # Shell interactif par défaut
+
+  # Service pour lancer le seed une seule fois
+  seed-db:
+    build: .
+    container_name: garden-seed
+    command: >
+      sh -c "python db/seed.py"
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    env_file:
+      - .env
+    restart: "no"
+
+volumes:
+  db_data:
+    # Ce volume n'est plus utilisé pour le code, mais pourrait l'être pour la DB si besoin.
