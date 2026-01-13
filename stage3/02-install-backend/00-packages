@@ -1,0 +1,7 @@
+python3-pip
+python3-venv
+lighttpd
+mosquitto
+mosquitto-clients
+python3-dev
+build-essential

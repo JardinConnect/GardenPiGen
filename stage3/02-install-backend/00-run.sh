@@ -1,10 +1,5 @@
 #!/bin/bash -e
 
-on_chroot << EOF
-apt-get update
-apt-get install -y python3-pip python3-venv lighttpd mosquitto mosquitto-clients python3-dev build-essential
-EOF
-
 # Check if backend files exist
 if [ ! -d "files/backend" ] || [ -z "$(ls -A files/backend)" ]; then
     echo "ERROR: files/backend is empty or missing!"
