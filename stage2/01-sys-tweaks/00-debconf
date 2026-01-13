@@ -23,3 +23,8 @@ keyboard-configuration	keyboard-configuration/ctrl_alt_bksp	boolean	true
 keyboard-configuration  keyboard-configuration/variant  select  ${KEYBOARD_LAYOUT}
 # for internal use
 keyboard-configuration  keyboard-configuration/optionscode      string  PLACEHOLDER
+
+# apt-listchanges configuration
+apt-listchanges apt-listchanges/which select news
+apt-listchanges apt-listchanges/confirm boolean false
+apt-listchanges apt-listchanges/save-seen boolean true
