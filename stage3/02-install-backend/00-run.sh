@@ -5,17 +5,24 @@ apt-get update
 apt-get install -y python3-pip python3-venv lighttpd mosquitto mosquitto-clients python3-dev build-essential
 EOF
 
-# Copy backend files
-mkdir -p "${ROOTFS_DIR}/opt/gardenback"
-if [ -d "files/backend" ] && [ "$(ls -A files/backend)" ]; then
-    cp -r files/backend/* "${ROOTFS_DIR}/opt/gardenback/"
-else
-    echo "WARNING: files/backend is empty. Backend will not be installed."
+# Check if backend files exist
+if [ ! -d "files/backend" ] || [ -z "$(ls -A files/backend)" ]; then
+    echo "ERROR: files/backend is empty or missing!"
     echo "Please copy your GardenBack source code to stage3/02-install-backend/files/backend/"
+    exit 1
 fi
 
-# Setup backend if files exist
-if [ -f "${ROOTFS_DIR}/opt/gardenback/requirements.txt" ]; then
+# Copy backend files
+mkdir -p "${ROOTFS_DIR}/opt/gardenback"
+cp -r files/backend/* "${ROOTFS_DIR}/opt/gardenback/"
+
+# Verify requirements.txt exists
+if [ ! -f "${ROOTFS_DIR}/opt/gardenback/requirements.txt" ]; then
+    echo "ERROR: requirements.txt not found in backend files!"
+    exit 1
+fi
+
+# Setup backend
     on_chroot << EOF
 cd /opt/gardenback
 
@@ -35,9 +42,8 @@ if [ -f "alembic.ini" ]; then
 fi
 EOF
 
-    # Set permissions
-    on_chroot << EOF
+# Set permissions
+on_chroot << EOF
 chown -R root:root /opt/gardenback
 chmod -R 755 /opt/gardenback
 EOF
-fi

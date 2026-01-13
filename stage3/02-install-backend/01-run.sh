@@ -20,7 +20,7 @@ lighty-enable-mod proxy
 # Enable GardenBack proxy configuration
 ln -sf /etc/lighttpd/conf-available/10-gardenback-proxy.conf /etc/lighttpd/conf-enabled/10-gardenback-proxy.conf
 
-# Enable mosquitto service
+# Enable services
 systemctl enable mosquitto.service
 systemctl enable lighttpd.service
 systemctl enable garden_back.service
