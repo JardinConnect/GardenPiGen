@@ -244,7 +244,7 @@ export QUILT_NO_DIFF_INDEX=1
 export QUILT_NO_DIFF_TIMESTAMPS=1
 export QUILT_REFRESH_ARGS="-p ab"
 
-export ENABLE_CLOUD_INIT=${ENABLE_CLOUD_INIT:-1}
+export ENABLE_CLOUD_INIT=${ENABLE_CLOUD_INIT:-0}
 
 # shellcheck source=scripts/common
 source "${SCRIPT_DIR}/common"

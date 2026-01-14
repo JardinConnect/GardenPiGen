@@ -18,18 +18,15 @@ if [ ! -f "${ROOTFS_DIR}/opt/gardenback/requirements.txt" ]; then
 fi
 
 # Setup backend
-    on_chroot << EOF
+on_chroot << EOF
 cd /opt/gardenback
 
 # Setup Virtual Environment
 python3 -m venv venv
 source venv/bin/activate
 
-# Upgrade pip
-pip3 install --upgrade pip
-
-# Install requirements with retries and timeout
-pip3 install --retries 10 --timeout 60 -r requirements.txt
+# Install requirements (skip pip upgrade to save time)
+pip3 install -r requirements.txt
 
 # Initialize database if alembic exists
 if [ -f "alembic.ini" ]; then

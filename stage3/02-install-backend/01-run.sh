@@ -9,6 +9,10 @@ install -m 644 files/10-gardenback-proxy.conf "${ROOTFS_DIR}/etc/lighttpd/conf-a
 # Install mosquitto configuration
 install -m 644 files/mosquitto.conf "${ROOTFS_DIR}/etc/mosquitto/conf.d/"
 
+# Create mosquitto log directory
+mkdir -p "${ROOTFS_DIR}/var/log/mosquitto"
+chown -R mosquitto:mosquitto "${ROOTFS_DIR}/var/log/mosquitto" 2>/dev/null || true
+
 # Install environment configuration
 mkdir -p "${ROOTFS_DIR}/opt/gardenback"
 install -m 644 files/.env "${ROOTFS_DIR}/opt/gardenback/"
