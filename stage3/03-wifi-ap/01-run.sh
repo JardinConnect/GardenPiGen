@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+# Load AP configuration
+source files/ap-config
+
 # Install hostapd configuration
 install -m 644 files/hostapd.conf "${ROOTFS_DIR}/etc/hostapd/hostapd.conf"
 
@@ -21,18 +24,18 @@ EOF
 mkdir -p "${ROOTFS_DIR}/etc/NetworkManager/conf.d"
 cat > "${ROOTFS_DIR}/etc/NetworkManager/conf.d/unmanaged-wlan0.conf" << EOF
 [keyfile]
-unmanaged-devices=interface-name:wlan0
+unmanaged-devices=interface-name:${AP_INTERFACE}
 EOF
 
 # Create static IP configuration for wlan0
 mkdir -p "${ROOTFS_DIR}/etc/network/interfaces.d"
-cat > "${ROOTFS_DIR}/etc/network/interfaces.d/wlan0" << EOF
-allow-hotplug wlan0
-iface wlan0 inet static
-    address 192.168.4.1
-    netmask 255.255.255.0
-    network 192.168.4.0
-    broadcast 192.168.4.255
+cat > "${ROOTFS_DIR}/etc/network/interfaces.d/${AP_INTERFACE}" << EOF
+allow-hotplug ${AP_INTERFACE}
+iface ${AP_INTERFACE} inet static
+    address ${AP_IP_ADDRESS}
+    netmask ${AP_NETMASK}
+    network ${AP_NETWORK}
+    broadcast ${AP_BROADCAST}
 EOF
 
 # Enable IP forwarding
