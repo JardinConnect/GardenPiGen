@@ -5,3 +5,5 @@ mosquitto
 mosquitto-clients
 python3-dev
 build-essential
+libffi-dev
+libssl-dev

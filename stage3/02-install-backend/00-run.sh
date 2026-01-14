@@ -28,8 +28,8 @@ source venv/bin/activate
 # Upgrade pip
 pip3 install --upgrade pip
 
-# Install requirements
-pip3 install -r requirements.txt
+# Install requirements with retries and timeout
+pip3 install --retries 10 --timeout 60 -r requirements.txt
 
 # Initialize database if alembic exists
 if [ -f "alembic.ini" ]; then
