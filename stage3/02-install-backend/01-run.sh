@@ -31,9 +31,9 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 
 # Initialize database if alembic exists
-if [ -f "alembic.ini" ]; then
-    python3 -m alembic upgrade head
-fi
+# if [ -f "alembic.ini" ]; then
+#     python3 -m alembic upgrade head
+# fi
 EOF
 
 # Set permissions
