@@ -19,13 +19,13 @@ mkdir -p "${ROOTFS_DIR}/opt/gardenback"
 install -m 644 files/.env "${ROOTFS_DIR}/opt/gardenback/"
 
 on_chroot << EOF
-# Enable lighttpd proxy module
 lighty-enable-mod proxy
+lighty-enable-mod rewrite
 
-# Enable GardenBack proxy configuration
+sed -i 's|server.document-root.*|server.document-root = "/var/www/gardenfront/web"|' /etc/lighttpd/lighttpd.conf
+
 ln -sf /etc/lighttpd/conf-available/10-gardenback-proxy.conf /etc/lighttpd/conf-enabled/10-gardenback-proxy.conf
 
-# Enable services
 systemctl enable mosquitto.service
 systemctl enable lighttpd.service
 systemctl enable garden_back.service
