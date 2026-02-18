@@ -1,0 +1,17 @@
+[Unit]
+Description=Kiosk Mode
+Wants=graphical.target
+After=graphical.target
+
+[Service]
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=XDG_SESSION_TYPE=wayland
+Environment=MOZ_ENABLE_WAYLAND=1
+Type=simple
+ExecStart=/bin/bash /usr/local/bin/kiosk.sh
+Restart=on-abort
+User=pi
+Group=pi
+
+[Install]
+WantedBy=graphical.target

@@ -1,18 +1,21 @@
 #!/bin/bash -e
 
-# Check if backend files exist before attempting to copy
-if [ ! -d "files/backend" ] || [ -z "$(ls -A files/backend)" ]; then
-    echo "Skipping backend installation - no backend files found"
-    exit 0
+# Clone GardenBack from git submodule
+SUBMODULE_PATH="${BASE_DIR}/back/GardenBack"
+
+if [ ! -d "${SUBMODULE_PATH}" ] || [ -z "$(ls -A ${SUBMODULE_PATH})" ]; then
+    echo "ERROR: GardenBack submodule not initialized!"
+    echo "Please run: git submodule update --init --recursive"
+    exit 1
 fi
 
-# Copy backend files
+# Copy backend files from submodule
 mkdir -p "${ROOTFS_DIR}/opt/gardenback"
-cp -r files/backend/* "${ROOTFS_DIR}/opt/gardenback/"
+cp -r "${SUBMODULE_PATH}"/* "${ROOTFS_DIR}/opt/gardenback/"
 
 # Verify requirements.txt exists
 if [ ! -f "${ROOTFS_DIR}/opt/gardenback/requirements.txt" ]; then
-    echo "ERROR: requirements.txt not found in backend files!"
+    echo "ERROR: requirements.txt not found in GardenBack repository!"
     exit 1
 fi
 

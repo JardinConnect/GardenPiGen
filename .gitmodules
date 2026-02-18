@@ -1,0 +1,3 @@
+[submodule "back/GardenBack"]
+	path = back/GardenBack
+	url = git@github.com:JardinConnect/GardenBack.git
