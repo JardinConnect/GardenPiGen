@@ -1,5 +1,12 @@
 #!/bin/bash -e
 
+FRONT_SUBMODULE_PATH="${BASE_DIR}/front/GardenFront"
+
+if [ -d "${FRONT_SUBMODULE_PATH}/build" ]; then
+    mkdir -p "${ROOTFS_DIR}/var/www/gardenfront"
+    cp -r "${FRONT_SUBMODULE_PATH}/build"/* "${ROOTFS_DIR}/var/www/gardenfront/"
+fi
+
 install -m 644 files/garden_back.service "${ROOTFS_DIR}/etc/systemd/system/"
 
 install -m 644 files/10-gardenback-proxy.conf "${ROOTFS_DIR}/etc/lighttpd/conf-available/"
