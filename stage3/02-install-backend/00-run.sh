@@ -22,7 +22,6 @@ on_chroot << EOF
 lighty-enable-mod proxy
 lighty-enable-mod rewrite
 
-sed -i 's|server.document-root.*|server.document-root = "/var/www/gardenfront/web"|' /etc/lighttpd/lighttpd.conf
 
 ln -sf /etc/lighttpd/conf-available/10-gardenback-proxy.conf /etc/lighttpd/conf-enabled/10-gardenback-proxy.conf
 
