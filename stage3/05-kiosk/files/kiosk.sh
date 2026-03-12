@@ -4,9 +4,11 @@ KIOSK_URL="${KIOSK_URL:-http://localhost}"
 
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
 export XDG_SESSION_TYPE=wayland
-export MOZ_ENABLE_WAYLAND=1
+export OZONE_PLATFORM=wayland
 
 
-cage -s -- firefox-esr \
+cage -s -- chromium \
+  --ozone-platform=wayland \
+  --enable-features=UseOzonePlatform \
   --kiosk \
   "${KIOSK_URL}"
