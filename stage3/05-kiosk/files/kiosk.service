@@ -4,14 +4,13 @@ Wants=multi-user.target
 After=multi-user.target getty@tty1.service
 
 [Service]
-Environment=XDG_RUNTIME_DIR=/run/user/1000
 Environment=XDG_SESSION_TYPE=wayland
 Type=simple
 ExecStart=/bin/bash /usr/local/bin/kiosk.sh
 Restart=always
 RestartSec=3
-User=pi
-Group=pi
+User=@KIOSK_USER@
+Group=@KIOSK_USER@
 
 [Install]
 WantedBy=multi-user.target
