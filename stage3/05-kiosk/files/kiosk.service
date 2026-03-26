@@ -1,7 +1,6 @@
 [Unit]
 Description=Kiosk Mode
-Wants=multi-user.target
-After=multi-user.target getty@tty1.service
+After=graphical-session.target
 
 [Service]
 Environment=XDG_SESSION_TYPE=wayland
@@ -9,8 +8,6 @@ Type=simple
 ExecStart=/bin/bash /usr/local/bin/kiosk.sh
 Restart=always
 RestartSec=3
-User=@KIOSK_USER@
-Group=@KIOSK_USER@
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=graphical-session.target default.target
