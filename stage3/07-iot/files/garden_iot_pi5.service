@@ -1,0 +1,18 @@
+[Unit]
+Description=Garden IoT Pi5 Gateway Service
+After=network-online.target mosquitto.service
+Wants=network-online.target mosquitto.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/garden-iot-pi5
+Environment="PATH=/opt/garden-iot-pi5/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart=/opt/garden-iot-pi5/venv/bin/python /opt/garden-iot-pi5/main.py
+Restart=always
+RestartSec=5
+StartLimitInterval=200
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
