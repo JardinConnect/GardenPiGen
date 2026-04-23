@@ -17,6 +17,8 @@ cp -a "${IOT_SUBMODULE_PATH}/." "${IOT_INSTALL_PATH}/"
 install -m 644 files/garden_iot_pi5.service "${ROOTFS_DIR}/etc/systemd/system/"
 
 on_chroot << EOF
+systemctl enable ssh
+
 cd /opt/garden-iot-pi5
 
 python3 -m venv venv
