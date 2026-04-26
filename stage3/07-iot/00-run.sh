@@ -19,6 +19,9 @@ install -m 644 files/garden_iot_pi5.service "${ROOTFS_DIR}/etc/systemd/system/"
 on_chroot << EOF
 systemctl enable ssh
 
+# Enable SPI for LoRa module access
+raspi-config nonint do_spi 0
+
 cd /opt/garden-iot-pi5
 
 python3 -m venv venv
