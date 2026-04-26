@@ -14,6 +14,10 @@ ln -s /var/www/gardenfront/web "${ROOTFS_DIR}/var/www/html"
 install -m 644 files/garden_back.service "${ROOTFS_DIR}/etc/systemd/system/"
 
 install -m 644 files/10-gardenback-proxy.conf "${ROOTFS_DIR}/etc/lighttpd/conf-available/"
+install -m 644 files/20-gardenback-ssl.conf "${ROOTFS_DIR}/etc/lighttpd/conf-available/"
+
+install -m 755 files/generate-ssl-cert.sh "${ROOTFS_DIR}/usr/local/bin/"
+install -m 755 files/configure-hosts.sh "${ROOTFS_DIR}/usr/local/bin/"
 
 install -m 644 files/mosquitto.conf "${ROOTFS_DIR}/etc/mosquitto/conf.d/"
 
@@ -25,11 +29,21 @@ install -m 644 files/.env "${ROOTFS_DIR}/opt/gardenback/"
 on_chroot << EOF
 lighty-enable-mod proxy
 lighty-enable-mod rewrite
+lighty-enable-mod ssl
 
 sed -i '0,/\/var\/www\/html/s//\/var\/www\/html\/web\//g' /etc/lighttpd/lighttpd.conf
 
-
 ln -sf /etc/lighttpd/conf-available/10-gardenback-proxy.conf /etc/lighttpd/conf-enabled/10-gardenback-proxy.conf
+ln -sf /etc/lighttpd/conf-available/20-gardenback-ssl.conf /etc/lighttpd/conf-enabled/20-gardenback-ssl.conf
+
+# Configure local domain
+/usr/local/bin/configure-hosts.sh
+
+# Generate SSL certificates
+/usr/local/bin/generate-ssl-cert.sh
+
+# Generate Diffie-Hellman parameters
+openssl dhparam -out /etc/lighttpd/ssl/dhparams.pem 2048
 
 systemctl enable mosquitto.service
 systemctl enable lighttpd.service
