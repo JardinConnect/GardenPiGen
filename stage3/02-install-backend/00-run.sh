@@ -42,8 +42,12 @@ ln -sf /etc/lighttpd/conf-available/20-gardenback-ssl.conf /etc/lighttpd/conf-en
 # Generate SSL certificates
 /usr/local/bin/generate-ssl-cert.sh
 
-# Generate Diffie-Hellman parameters
-openssl dhparam -out /etc/lighttpd/ssl/dhparams.pem 2048
+# Generate Diffie-Hellman parameters (use 1024 for faster generation, or skip if file exists)
+if [ ! -f /etc/lighttpd/ssl/dhparams.pem ]; then
+    echo "Generating DH parameters (this may take a few minutes)..."
+    openssl dhparam -out /etc/lighttpd/ssl/dhparams.pem 1024 2>/dev/null || \
+    openssl dhparam -out /etc/lighttpd/ssl/dhparams.pem 512
+fi
 
 systemctl enable mosquitto.service
 systemctl enable lighttpd.service
