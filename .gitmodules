@@ -1,0 +1,9 @@
+[submodule "back/GardenBack"]
+	path = back/GardenBack
+	url = git@github.com:JardinConnect/GardenBack.git
+[submodule "front/GardenFront"]
+	path = front/GardenFront
+	url = git@github.com:JardinConnect/GardenFront.git
+[submodule "iot"]
+	path = iot
+	url = git@github.com:JardinConnect/GardenIOT.git
